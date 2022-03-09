@@ -38,16 +38,9 @@
           <div v-for="row in rows" :key="row.value">
             <span class="row-text">{{ row.text }}</span>
 
-            <div class="d-flex justify-content-between">
+            <div class="seats-display d-flex justify-content-between">
               <div v-for="col in columns" :key="col.value">
-                <input
-                  v-model="selected"
-                  :value="{ rowId: row.value, colId: col.value }"
-                  id="radio-check7"
-                  class="form-check-input txt-ipt"
-                  type="radio"
-                />
-                <label class="form-check-label txt-lbl" for="radio-check7" />
+                <font-awesome-icon @click="selectedSeats" icon="fa-solid fa-couch" class="seats-selected" style="font-size: 2rem; cursor: pointer;"/>
               </div>
             </div>
           </div>
@@ -134,6 +127,9 @@ export default {
         })
         .render(this.$refs.paypal);
     },
+    selectedSeats(){
+      alert('seats')
+    }
   },
 };
 </script>
@@ -197,5 +193,21 @@ export default {
 .row-text {
   position: absolute;
   left: 45px;
+}
+
+.seats-display{
+  margin: 20px;
+}
+
+.seats-default{
+  color: #fff;
+}
+
+.seats-selected{
+  color: #f17bde;
+}
+
+.seats-disabled{
+  color: #ccc;
 }
 </style>
