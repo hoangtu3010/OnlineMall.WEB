@@ -1,0 +1,79 @@
+.title-department {
+  margin: 70px 0;
+}
+
+.title-department span {
+  color: #818181;
+}
+
+.department-description {
+  padding: 40px 0;
+}
+
+.lst-card {
+  margin: 70px 0;
+}
+
+.lst-card .card-item {
+  text-align: center;
+  cursor: pointer;
+  transition: .3s;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.lst-card .card-item img {
+  width: 100%;
+}
+
+.lst-card .card-item .card-name {
+  font-size: 20px;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.lst-card .card-item:hover {
+  background: #fff;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.lst-card .card-item:hover .card-name {
+    opacity: 1;
+}
+
+.section-detail-card{
+  padding: 100px 0;
+}
+
+.section-detail-card .detail-card-logo {
+  width: 200px;
+  height: 200px;
+}
+
+.detail-card-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  border-radius: 15px;
+}
+
+.detail-cart-info{
+  margin-top: 20px;
+}
+
+.detail-cart-info b{
+  text-transform: uppercase;
+}
+
+.detail-card-content .detail-card-title{
+  padding-bottom: 20px;
+  border-bottom: 1px solid #c71c81;
+}
+
+.detail-card-content .detail-card-description{
+  padding: 40px 0;
+}
+
+.detail-card-image img{
+  width: 100%;
+}

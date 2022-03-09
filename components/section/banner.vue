@@ -132,7 +132,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .banner-section {
   padding: 100px 0;
   position: relative;
@@ -186,6 +186,10 @@ export default {
 
 .banner-content .col-lg-3:last-child {
   padding-right: 0;
+}
+
+.slider-banner-sm{
+  height: 456px;
 }
 
 /* .banner-content .col-lg-3:nth-child(2) {

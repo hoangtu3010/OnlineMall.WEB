@@ -27,15 +27,19 @@ export default {
         href: "https://fonts.googleapis.com/css2?family=Monoton&display=swap",
         rel: "stylesheet",
       },
+      {
+        rel: "stylesheet",
+        href: "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css",
+      },
     ],
     script: [{ src: "https://unpkg.com/scrollreveal", body: true }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['swiper/css/swiper.css'],
+  css: ["swiper/css/swiper.css", "~/assets/css/generic-style.css", '@fortawesome/fontawesome-svg-core/styles.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ["@/plugins/api", "@/plugins/mixins/common"],
+  plugins: ["@/plugins/api", "@/plugins/mixins/common", '~/plugins/fontawesome.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -56,8 +60,8 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: "https://localhost:44325",
-    browserBaseUrl: "https://localhost:44378",
+    baseURL: "https://localhost:5001",
+    browserBaseUrl: "https://localhost:5001",
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -65,7 +69,7 @@ export default {
   // Router
   router: {
     scrollBehavior: function (to, from, savedPosition) {
-      return { x: 0, y: 0 }
-    }
+      return { x: 0, y: 0 };
+    },
   },
 };

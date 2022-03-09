@@ -63,87 +63,17 @@
           </h2>
         </div>
         <div class="row">
-          <div class="col-lg-4 gallery-box">
-            <nuxt-link to="/gallery/1">
+          <div v-for="(item, index) in listData" :key="item.id" class="col-lg-4 gallery-box">
+            <nuxt-link :to="'/photo-gallery/' + item.id">
               <div class="gallery-item-img">
                 <div class="gallery-item-icon">
                   <b-icon icon="search"></b-icon>
                 </div>
-                <img src="~/assets/images/slider-1.png" alt="image" />
+                <img :src="item.imageSrc" alt="image" />
               </div>
               <div class="gallery-item-info">
-                <p>Crazy bowling</p>
-                <b>Category</b>
-              </div>
-            </nuxt-link>
-          </div>
-          <div class="col-lg-4 gallery-box">
-            <nuxt-link to="/gallery/1">
-              <div class="gallery-item-img">
-                <div class="gallery-item-icon">
-                  <b-icon icon="search"></b-icon>
-                </div>
-                <img src="~/assets/images/slider-1.png" alt="image" />
-              </div>
-              <div class="gallery-item-info">
-                <p>Crazy bowling</p>
-                <b>Category</b>
-              </div>
-            </nuxt-link>
-          </div>
-          <div class="col-lg-4 gallery-box">
-            <nuxt-link to="/gallery/1">
-              <div class="gallery-item-img">
-                <div class="gallery-item-icon">
-                  <b-icon icon="search"></b-icon>
-                </div>
-                <img src="~/assets/images/slider-1.png" alt="image" />
-              </div>
-              <div class="gallery-item-info">
-                <p>Crazy bowling</p>
-                <b>Category</b>
-              </div>
-            </nuxt-link>
-          </div>
-          <div class="col-lg-4 gallery-box">
-            <nuxt-link to="/gallery/1">
-              <div class="gallery-item-img">
-                <div class="gallery-item-icon">
-                  <b-icon icon="search"></b-icon>
-                </div>
-                <img src="~/assets/images/slider-1.png" alt="image" />
-              </div>
-              <div class="gallery-item-info">
-                <p>Crazy bowling</p>
-                <b>Category</b>
-              </div>
-            </nuxt-link>
-          </div>
-          <div class="col-lg-4 gallery-box">
-            <nuxt-link to="/gallery/1">
-              <div class="gallery-item-img">
-                <div class="gallery-item-icon">
-                  <b-icon icon="search"></b-icon>
-                </div>
-                <img src="~/assets/images/slider-1.png" alt="image" />
-              </div>
-              <div class="gallery-item-info">
-                <p>Crazy bowling</p>
-                <b>Category</b>
-              </div>
-            </nuxt-link>
-          </div>
-          <div class="col-lg-4 gallery-box">
-            <nuxt-link to="/gallery/1">
-              <div class="gallery-item-img">
-                <div class="gallery-item-icon">
-                  <b-icon icon="search"></b-icon>
-                </div>
-                <img src="~/assets/images/slider-1.png" alt="image" />
-              </div>
-              <div class="gallery-item-info">
-                <p>Crazy bowling</p>
-                <b>Category</b>
+                <p>{{'Ảnh' + (index + 1)}}</p>
+                <p>{{item.description}}</p>
               </div>
             </nuxt-link>
           </div>
@@ -174,6 +104,7 @@
 </template>
 
 <script>
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 
 export default {
   components: { Swiper, SwiperSlide },
@@ -202,7 +133,23 @@ export default {
           },
         },
       },
+      listData: [],
     };
+  },
+  created() {
+    this.getData();
+  },
+  methods: {
+    getData() {
+      return this.$axios
+        .get(this.$api.GALLERIES_GET_ALL)
+        .then((res) => {
+          this.listData = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
@@ -245,7 +192,8 @@ export default {
 
 .gallery .gallery-box .gallery-item-img img {
   width: 100%;
-  height: 220px;
+  height: 100%;
+  object-fit: cover;
   background-size: cover;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -259,6 +207,7 @@ export default {
 
 .gallery .gallery-box .gallery-item-img {
   position: relative;
+  height: 220px;
 }
 
 .gallery .gallery-box .gallery-item-img .gallery-item-icon {
@@ -299,6 +248,12 @@ export default {
 
 .gallery .gallery-box:hover .gallery-item-info p {
   color: #b956fe;
+}
+
+.gallery .gallery-box .gallery-item-info p:last-child{
+   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .partner {

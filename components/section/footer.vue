@@ -33,13 +33,11 @@
       </div>
       <div class="widget">
         <div class="row">
-          <div class="col-sm-6 col-md-5 col-lg-5">
+          <div class="col-sm-6 col-md-5 col-lg-4">
             <div class="about-widget">
               <nuxt-link to="/"><img src="/logo.png" alt="logo" /></nuxt-link>
               <p>
-                Be the first to find out about exclusive deals, the latest
-                Lookbooks trends. We're on a mission to build a better future
-                where technology.
+                Online Mall is the most exclusive shopping mall and entertainment center. Located in an area that is best known for its high-end stores and restaurants.
               </p>
               <ul class="social">
                 <li class="social-item">
@@ -65,7 +63,31 @@
               </ul>
             </div>
           </div>
-          <div class="col-sm-6 col-md-3 col-lg-3">
+          <div class="col-sm-6 col-md-3 col-lg-2">
+            <div class="menu-widget">
+              <div class="title">
+                <h3>Navigate</h3>
+              </div>
+              <ul>
+                <li>
+                  <nuxt-link to="/shopping">Shopping</nuxt-link>
+                </li>
+                <li>
+                  <nuxt-link to="/dinning">Dinning</nuxt-link>
+                </li>
+                <li>
+                  <nuxt-link to="/cinema">Cinema</nuxt-link>
+                </li>
+                <li>
+                  <nuxt-link to="/floor-info">Floor Info</nuxt-link>
+                </li>
+                <li>
+                  <nuxt-link to="/photo-gallery">Photo Gallery</nuxt-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3 col-lg-2">
             <div class="menu-widget">
               <div class="title">
                 <h3>Quick Links</h3>
@@ -83,7 +105,7 @@
               </ul>
             </div>
           </div>
-          <div class="col-sm-12 col-md-4 col-lg-4">
+          <div class="col-sm-12 col-md-4 col-lg-3">
             <div class="contact-widget">
               <div class="title">
                 <h3>Contact</h3>

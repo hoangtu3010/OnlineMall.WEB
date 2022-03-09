@@ -1,6 +1,9 @@
 <template>
-  <div>
-      <h1>Photo Gallery</h1>
+  <div class="photo-gallery-section container">
+      <h1 class="text-center">Photo Gallery</h1>
+      <div class="row">
+        <div class="col-lg-4"></div>
+      </div>
   </div>
 </template>
 
@@ -11,5 +14,7 @@ export default {
 </script>
 
 <style>
-
+.photo-gallery-section{
+  padding: 100px 0;
+}
 </style>

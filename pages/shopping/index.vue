@@ -1,39 +1,52 @@
 <template>
   <div>
-    Shopping
+    <section-slider-banner :department="department" />
+    <div class="container">
+      <h2 class="title-department text-center">
+        <b>OUR BRANDS</b>
+        <span>ALL THE TRENDING SHOPS FOR YOU</span>
+      </h2>
+      <div class="lst-card row">
+        <div
+          v-for="(item, index) in listData.filter(
+            (x) => x.department.name === 'Shopping'
+          )"
+          :key="index"
+          class="card-item col-lg-3"
+        >
+          <nuxt-link :to="'/shopping/'+item.id">
+            <img :src="item.imageLogoSrc" alt="" />
+            <b class="card-name">{{ item.name }}</b>
+          </nuxt-link>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-
 export default {
   data() {
     return {
-      swiperOption: {
-        slidesPerView: 4,
-        spaceBetween: 30,
-        loop: true,
-        breakpoints: {
-          1024: {
-            slidesPerView: 4,
-            spaceBetween: 30,
-          },
-          768: {
-            slidesPerView: 3,
-            spaceBetween: 20,
-          },
-          640: {
-            slidesPerView: 2,
-            spaceBetween: 10,
-          },
-          320: {
-            slidesPerView: 1,
-          },
-        },
-      },
+      department: "shopping",
+       listData: [],
     };
   },
+  created(){
+    this.getData();
+  },
+  methods: {
+    getData() {
+      return this.$axios
+        .get(this.$api.SHOPS_GET_ALL)
+        .then((res) => {
+          this.listData = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  }
 };
 </script>
 
