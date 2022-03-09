@@ -1,21 +1,19 @@
 <template>
-  <div class="bookings-section">
+  <div class="bookings-section" :key="keyLoad">
     <div class="header-bookings">
       <div class="container">
         <div class="action-header">
           <nuxt-link to="/"> Back </nuxt-link>
-          <div>
-              <div v-if="!paidFor">
-            <h1>Buy this ticket</h1>
-          </div>
+          <nuxt-link
+            v-if="selected.id"
+            :to="{
+              path: 'bookings/payments',
+              query: { id, movieToday, seatsId: selected.id },
+            }"
+          >
+            Pay
+          </nuxt-link>
 
-          <div v-if="paidFor">
-            <h1>{{textPay}}</h1>
-          </div>
-
-          <div ref="paypal"></div>
-          </div>
-        
           <div class="ticket-info">
             <h4>Aquaman</h4>
             <p>Today</p>
@@ -40,7 +38,12 @@
 
             <div class="seats-display d-flex justify-content-between">
               <div v-for="col in columns" :key="col.value">
-                <font-awesome-icon @click="selectedSeats" icon="fa-solid fa-couch" class="seats-selected" style="font-size: 2rem; cursor: pointer;"/>
+                <font-awesome-icon
+                  @click="selectedSeats(row.value, col.value)"
+                  icon="fa-solid fa-couch"
+                  style="font-size: 2rem; cursor: pointer"
+                  :class="seatsColor(row.value, col.value)"
+                />
               </div>
             </div>
           </div>
@@ -56,30 +59,31 @@ import commonConst from "@/constants/common";
 export default {
   data() {
     return {
-      id: this.$route.params.id,
+      id: this.$route.query.id,
+      movieToday: this.$route.query.movieToday,
       listData: [],
+      listDisable: [],
+      keyLoad:0,
       selected: {},
-      textPay:'',
-      loaded: false,
-      paidFor: false,
-      product: {
-        price: 555.77,
-        description: "leg lamp from that one movie",
-        img: "./assets/lamp.jpg"
-      },
       columns: commonConst.CINEMA_COLUMNS,
       rows: commonConst.CINEMA_ROWS,
     };
   },
+  watch: {},
   created() {
     this.getData();
+    this.getDisableSeats();
+
+    console.log(this.$route, "asdas");
   },
   mounted() {
-    const script = document.createElement("script");
-    script.src =
-      "https://www.paypal.com/sdk/js?client-id=AUj5MRAcn-XQGNkksByNjOs6jND6Qn8fi2g_NuATvj0_sJZSDGBFVj5zg65600RO3BiCejQR_zOwNe9G";
-    script.addEventListener("load", this.setLoaded);
-    document.body.appendChild(script);
+    setTimeout(() => {
+      this.getDisableSeats();
+      if (this.listDisable.includes(this.selected)) {
+        this.$toast.error("This ticket is paid");
+        this.keyLoad++
+      }
+    }, 200);
   },
   methods: {
     getData() {
@@ -92,44 +96,40 @@ export default {
           console.log(err);
         });
     },
-    setLoaded () {
-      this.loaded = true;
-      window.paypal
-        .Buttons({
-          createOrder: (data, actions) => {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  description: this.product.description,
-                  amount: {
-                    currency_code: "USD",
-                    value: this.product.price,
-                  },
-                },
-              ],
-            });
-          },
-          onApprove: async (data, actions) => {
-            const order = await actions.order.capture();
-            this.paidFor = true;
-            console.log(order);
-            if(order.status =="COMPLETED" ){
-              this.textPay="Thanks you very much!,Check your mail to get your ticket"
-              
-            }else{
-              this.textPay="Opp! Has error!"
-
-            }
-          },
-          onError: (err) => {
-            console.log(err);
-          },
+    getDisableSeats() {
+      return this.$axios
+        .get(this.$api.SEATS_GET_DISABLED, {
+          params: { movieToday: this.movieToday },
         })
-        .render(this.$refs.paypal);
+        .then((res) => {
+          this.listDisable = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    selectedSeats(){
-      alert('seats')
-    }
+
+    seatsColor(row, col) {
+      if (this.selected.row == row && this.selected.column == col) {
+        return "seats-selected";
+      }
+
+      var find = this.listData.find((x) => x.row == row && x.column == col);
+      var disabled = this.listDisable.find(
+        (x) => x.row == row && x.column == col
+      );
+      if (find && !disabled) return "seats-default";
+
+      return "seats-disabled";
+    },
+    selectedSeats(row, col) {
+      var find = this.listData.find((x) => x.row == row && x.column == col);
+      if (this.selected == find) {
+        this.selected = {};
+        return;
+      }
+      this.selected = find;
+    },
   },
 };
 </script>
@@ -195,19 +195,20 @@ export default {
   left: 45px;
 }
 
-.seats-display{
+.seats-display {
   margin: 20px;
 }
 
-.seats-default{
+.seats-default {
   color: #fff;
 }
 
-.seats-selected{
+.seats-selected {
   color: #f17bde;
 }
 
-.seats-disabled{
-  color: #ccc;
+.seats-disabled {
+  color: rgb(75, 75, 75);
+  pointer-events: none;
 }
 </style>

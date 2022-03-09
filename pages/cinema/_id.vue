@@ -24,7 +24,8 @@
           <div class="movies-title">
             <div class="movies-title-top">
               <h1>{{ objValue.movies.name }}</h1>
-              <nuxt-link :to="'/cinema/bookings/'+objValue.movies.id" class="btn"
+              <!-- <nuxt-link :to="'/cinema/bookings/'+objValue.movies.id+'&'+movieToday:objValue.id" class="btn" -->
+              <nuxt-link :to="{ path: 'bookings', query: { id: objValue.movies.id,movieToday:objValue.id }}" class="btn"
                 ><font-awesome-icon icon="fa-solid fa-ticket" /><span
                   >Bookings Now</span
                 ></nuxt-link
@@ -51,15 +52,13 @@ export default {
   data() {
     return {
       id: this.$route.params.id,
-      objValue: {},
+      objValue: {movies:{}},
       genreValue: {},
       key: 0,
     };
   },
   created() {
     this.getData();
-    console.log( this.$route.params)
-    
   },
   methods: {
     getData() {

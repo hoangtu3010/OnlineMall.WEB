@@ -13,7 +13,7 @@
               <img :src="item.movies.imageSrc" alt="" />
               <b-icon class="quality-icon" icon="badge4k-fill"></b-icon>
               <b-icon class="subtitle-icon" icon="badge-cc-fill"></b-icon>
-              <nuxt-link class="movie-booking-button btn" :to="'/cinema/booking'+item.movies.id"
+              <nuxt-link class="movie-booking-button btn" :to="{ path: '/cinema/bookings', query: { id: item.movies.id,movieToday:item.id }}"
                 >Booking Now</nuxt-link
               >
             </div>
