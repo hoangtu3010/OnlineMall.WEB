@@ -8,12 +8,12 @@
       </h2>
       <div class="lst-movies row">
         <div v-for="(item, index) in listData" :key="index" class="movie-item col-lg-3">
-          <nuxt-link :to="'/cinema/' + item.movies.id">
+          <nuxt-link :to="'/cinema/' + item.id">
             <div class="movie-image">
               <img :src="item.movies.imageSrc" alt="" />
               <b-icon class="quality-icon" icon="badge4k-fill"></b-icon>
               <b-icon class="subtitle-icon" icon="badge-cc-fill"></b-icon>
-              <nuxt-link class="movie-booking-button btn" to="/booking/1"
+              <nuxt-link class="movie-booking-button btn" :to="'/cinema/booking'+item.movies.id"
                 >Booking Now</nuxt-link
               >
             </div>

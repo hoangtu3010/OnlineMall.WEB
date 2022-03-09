@@ -9,21 +9,22 @@
 }"
       >
         <div class="movies-image">
-          <img src="~/assets/images/slider-1.2.png" alt="" />
+          <img :src="objValue.movies.imageSrc" alt="" />
+          <!-- {{objValue.movies}} -->
         </div>
         <div class="movies-info">
           <b>Genre:</b>
           <p>{{ genreValue.name }}</p>
           <b>Duration:</b>
-          <p>{{ objValue.duration }}</p>
+          <p>{{ objValue.movies.duration }}</p>
         </div>
       </div>
       <div class="col-lg-8">
         <div class="movies-content">
           <div class="movies-title">
             <div class="movies-title-top">
-              <h1>{{ objValue.name }}</h1>
-              <nuxt-link :to="'/cinema/bookings/'+objValue.id" class="btn"
+              <h1>{{ objValue.movies.name }}</h1>
+              <nuxt-link :to="'/cinema/bookings/'+objValue.movies.id" class="btn"
                 ><font-awesome-icon icon="fa-solid fa-ticket" /><span
                   >Bookings Now</span
                 ></nuxt-link
@@ -32,12 +33,12 @@
             <span>17:00 19:00 23:00</span>
           </div>
           <div class="movies-description">
-            {{ objValue.description }}
+            {{ objValue.movies.description }}
           </div>
           <div class="movies-trailer">
             <h3>Official Video</h3>
 
-            <div v-html="objValue.trailer"></div>
+            <div v-html="objValue.movies.trailer"></div>
           </div>
         </div>
       </div>
@@ -57,16 +58,17 @@ export default {
   },
   created() {
     this.getData();
-    setTimeout(() => {
-      this.getGenre();
-    }, 1000);
+    console.log( this.$route.params)
+    
   },
   methods: {
     getData() {
       return this.$axios
-        .get(this.$api.MOVIES_GET_BY_ID + this.id)
+        .get(this.$api.MOVIES_TODAY_GET_BY_ID + this.id)
         .then((res) => {
           this.objValue = { ...res.data };
+          console.log(this.objValue)
+          this.getGenre()
         })
         .catch((err) => {
           console.log(err);
@@ -74,9 +76,9 @@ export default {
     },
     getGenre() {
       return this.$axios
-        .get(this.$api.GENRES_GET_BY_ID + this.objValue.genreId)
+        .get(this.$api.GENRES_GET_BY_ID + this.objValue.movies.genreId)
         .then((res) => {
-          this.genreValue = { ...res.data };
+          this.genreValue = { ...res };
         })
         .catch((err) => {
           console.log(err);
