@@ -4,7 +4,18 @@
       <div class="container">
         <div class="action-header">
           <nuxt-link to="/"> Back </nuxt-link>
-            <nuxt-link to="cinema/payment">Process To Pay</nuxt-link>
+          <div>
+              <div v-if="!paidFor">
+            <h1>Buy this ticket</h1>
+          </div>
+
+          <div v-if="paidFor">
+            <h1>{{textPay}}</h1>
+          </div>
+
+          <div ref="paypal"></div>
+          </div>
+        
           <div class="ticket-info">
             <h4>Aquaman</h4>
             <p>Today</p>
@@ -55,12 +66,27 @@ export default {
       id: this.$route.params.id,
       listData: [],
       selected: {},
+      textPay:'',
+      loaded: false,
+      paidFor: false,
+      product: {
+        price: 555.77,
+        description: "leg lamp from that one movie",
+        img: "./assets/lamp.jpg"
+      },
       columns: commonConst.CINEMA_COLUMNS,
       rows: commonConst.CINEMA_ROWS,
     };
   },
   created() {
     this.getData();
+  },
+  mounted() {
+    const script = document.createElement("script");
+    script.src =
+      "https://www.paypal.com/sdk/js?client-id=AUj5MRAcn-XQGNkksByNjOs6jND6Qn8fi2g_NuATvj0_sJZSDGBFVj5zg65600RO3BiCejQR_zOwNe9G";
+    script.addEventListener("load", this.setLoaded);
+    document.body.appendChild(script);
   },
   methods: {
     getData() {
@@ -72,6 +98,41 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    setLoaded () {
+      this.loaded = true;
+      window.paypal
+        .Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  description: this.product.description,
+                  amount: {
+                    currency_code: "USD",
+                    value: this.product.price,
+                  },
+                },
+              ],
+            });
+          },
+          onApprove: async (data, actions) => {
+            const order = await actions.order.capture();
+            this.paidFor = true;
+            console.log(order);
+            if(order.status =="COMPLETED" ){
+              this.textPay="Thanks you very much!,Check your mail to get your ticket"
+              
+            }else{
+              this.textPay="Opp! Has error!"
+
+            }
+          },
+          onError: (err) => {
+            console.log(err);
+          },
+        })
+        .render(this.$refs.paypal);
     },
   },
 };
