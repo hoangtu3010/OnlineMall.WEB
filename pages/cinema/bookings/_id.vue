@@ -3,19 +3,20 @@
     <div class="header-bookings">
       <div class="container">
         <div class="action-header">
-          <nuxt-link to="/"> Back </nuxt-link>
+          <nuxt-link :to="'/cinema/' + this.id" class="btn"> Back </nuxt-link>
+          <h3 v-if="!selected.id">Select Your Seats</h3>
           <nuxt-link
             v-if="selected.id"
             :to="{
               path: 'bookings/payments',
               query: { id, movieToday, seatsId: selected.id },
             }"
+            class="btn"
           >
             Pay
           </nuxt-link>
-
           <div class="ticket-info">
-            <h4>Aquaman</h4>
+            <h4>{{movieObj.name}}</h4>
             <p>Today</p>
           </div>
         </div>
@@ -57,6 +58,7 @@
 import commonConst from "@/constants/common";
 
 export default {
+  layout: 'empty',
   data() {
     return {
       id: this.$route.query.id,
@@ -65,6 +67,7 @@ export default {
       listDisable: [],
       keyLoad:0,
       selected: {},
+      movieObj: {},
       columns: commonConst.CINEMA_COLUMNS,
       rows: commonConst.CINEMA_ROWS,
     };
@@ -86,6 +89,16 @@ export default {
     }, 200);
   },
   methods: {
+    getMovieDetail(){
+      return this.$axios
+        .get(this.$api.MOVIES_GET_BY_ID + this.id)
+        .then((res) => {
+          this.movieObj = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     getData() {
       return this.$axios
         .get(this.$api.SEATS_GET_ALL)
@@ -141,13 +154,13 @@ export default {
 
 .header-bookings {
   background: #2b2d3d;
-  padding: 100px 0 50px;
+  padding: 50px 0;
   color: #fff;
 }
 
 .main-bookings {
   padding-top: 40px;
-  padding-bottom: 100px;
+  padding-bottom: 30px;
   background: #333545;
   color: #fff;
 }

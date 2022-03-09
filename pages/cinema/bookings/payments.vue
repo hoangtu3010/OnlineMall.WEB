@@ -1,38 +1,93 @@
 <template>
-  <div class="row">
-    <div class="col-md-6">
-      <label for="">name</label>
-      <input type="text" v-model="dataForm.name" />
-      <br />
-      <label for="">Phone</label>
-      <input type="phone" v-model="dataForm.phone" />
-      <br />
-      <label for="">Email</label>
-      <input type="email" v-model="dataForm.email" />
+  <div class="payment-section">
+    <div class="payment-header">
+      <div class="container d-flex justify-content-between">
+        <button @click="$router.go(-1)" class="btn">Back</button>
+        <h2 style="color: #fff">{{objValue.name}}</h2>
+      </div>
     </div>
-    <div class="col-md-6">
-      <div v-if="!paidFor">
-        <h1>Buy this ticket - ${{ product.price }} USD</h1>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="movies-card-info">
+            <p>
+              <b>Date:</b>
+              <span>{{ formatDate(moviesTodayObj.showDate) }}</span>
+            </p>
+            <p>
+              <b>Time:</b>
+              <span>{{ formatDate(moviesTodayObj.showTime, "HH:mm") }}</span>
+            </p>
+            <p><b>Theater:</b> <span>OnlineMall</span></p>
+            <p>
+              <b>Seats:</b> <span>{{ product.rank }} - {{ product.name }}</span>
+            </p>
+          </div>
+          <div class="movie-banner">
+            <img :src="objValue.imageSrc" alt="" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div v-if="!paidFor">
+            <h2 class="text-center">Buy this ticket</h2>
+          </div>
 
-        <p>{{ objValue.description }}</p>
+          <form action="">
+            <div class="form-group">
+              <label for="">Name</label>
+              <input type="text" v-model="dataForm.name" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="">Phone</label>
+              <input
+                type="phone"
+                v-model="dataForm.phone"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label for="">Email</label>
+              <input
+                type="email"
+                v-model="dataForm.email"
+                class="form-control"
+              />
+            </div>
+          </form>
+
+          <div v-if="paidFor">
+            <h3>Your ticket has been emailed, thank you for using the service!</h3>
+          </div>
+
+          <div ref="paypal"></div>
+        </div>
+        <div class="col-md-4">
+          <div class="booking-summary">
+            <div class="booking-summary-header">
+              Booking Summary
+            </div>
+            <div class="booking-summary-content">
+              <p><b>{{objValue.name}}</b><span>${{ product.price }}</span></p>
+              <p><b>{{product.name}} ( {{product.rank}} )</b><span>{{product.rank === 'vip' ? '$10' : '0$'}}</span></p>
+            </div>
+            <div class="booking-footer">
+              <p><b>Total: </b> <span>${{product.price}}</span></p>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div v-if="paidFor">
-        <h1>Noice, you bought a beautiful lamp!</h1>
-      </div>
-
-      <div ref="paypal"></div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  // layout: "empty",
+  layout: "empty",
   data: function () {
     return {
       id: this.$route.query.id,
       objValue: {},
+      moviesTodayObj: {},
       dataForm: {
         moviesTodayId: this.$route.query.movieToday,
         seatsId: this.$route.query.seatsId,
@@ -62,13 +117,15 @@ export default {
   created() {
     this.getMovie();
     this.getSeat();
+    this.getMovieToday();
   },
   methods: {
     booking(data) {
       return this.$axios
         .post(this.$api.BOOKING_CREATE, data)
         .then((res) => {
-          this.$toast.success("Paid!");
+          this.$toast.success("Your ticket has been emailed, thank you for using the service!");
+          this.$router.push('/cinema')
         })
         .catch((err) => {
           this.$toast.error("Error!");
@@ -94,6 +151,16 @@ export default {
         .get(this.$api.MOVIES_GET_BY_ID + this.id)
         .then((res) => {
           this.objValue = { ...res.data };
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getMovieToday() {
+      return this.$axios
+        .get(this.$api.MOVIES_TODAY_GET_BY_ID + this.$route.query.movieToday)
+        .then((res) => {
+          this.moviesTodayObj = { ...res.data };
         })
         .catch((err) => {
           console.log(err);
@@ -133,8 +200,6 @@ export default {
           onApprove: async (data, actions) => {
             const order = await actions.order.capture();
             this.paidFor = true;
-
-            console.log(order);
             if (order.status == "COMPLETED") {
               this.dataForm.total = this.product.price;
               this.booking(this.dataForm);
@@ -151,3 +216,62 @@ export default {
   },
 };
 </script>
+<style scoped>
+.payment-header {
+  background: #333545;
+  padding: 50px 0;
+  margin-bottom: 40px;
+}
+
+.payment-header button{
+  background: #fff;
+}
+
+.movies-card-info {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.movies-card-info p span {
+  float: right;
+}
+
+.movie-banner {
+  height: 250px;
+  margin: 40px 0;
+}
+
+.movie-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.booking-summary {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.booking-summary-header {
+  background: #333545;
+  padding: 12px 20px;
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.booking-summary-content{
+  padding: 30px;
+  border-bottom: 1px dashed #000;
+}
+
+.booking-summary p span{
+  float: right;
+}
+
+.booking-footer{
+  padding: 30px;
+}
+</style>
