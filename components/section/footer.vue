@@ -81,9 +81,6 @@
                 <li>
                   <nuxt-link to="/floor-info">Floor Info</nuxt-link>
                 </li>
-                <li>
-                  <nuxt-link to="/photo-gallery">Photo Gallery</nuxt-link>
-                </li>
               </ul>
             </div>
           </div>

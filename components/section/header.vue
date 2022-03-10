@@ -24,9 +24,7 @@
           <li class="menu-item">
             <nuxt-link to="/cinema">Cinema</nuxt-link>
           </li>
-          <li class="menu-item">
-            <nuxt-link to="/photo-gallery">Photo Gallery</nuxt-link>
-          </li>
+         
           <li class="menu-item">
             <nuxt-link to="/product">Product</nuxt-link>
           </li>
